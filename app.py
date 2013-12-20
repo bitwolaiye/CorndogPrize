@@ -47,7 +47,7 @@ def get_base(url, params=None):
 
 def get_comments(id='3634493107297962'):
     f = open('1.json', 'w')
-    content = get_base('comments/show.json', {'id':id})
+    content = get_base('comments/show.json', {'id':id, 'count': 200})
     f.write(content)
     f.close()
     return json.loads(content)
@@ -71,8 +71,9 @@ def gen_user_list_html(users):
     f.write(u'昵称|性别|主页|相册|认证\n')
     f.write(u'-|-|-|-|-\n')
     for u in users:
-        u_str = u'%s|%s|%s|%s|%s\n' % (u['name'], u['gender'], 'http://weibo.com/' + u['profile_url'],
-                                       'http://photo.weibo.com/%d/albums/index' % u['id'],
+        u_str = u'%s|%s|%s|%s|%s\n' % ('%s![%s](%s)' % (u['name'], u['name'], u['profile_image_url']),
+                                       u['gender'], u'[主页](http://weibo.com/%s)' % u['profile_url'],
+                                       u'[照片](http://photo.weibo.com/%d/albums/index)' % u['id'],
                                        get_verified_type(u['verified_type']))
         f.write(u_str)
     f.close()
